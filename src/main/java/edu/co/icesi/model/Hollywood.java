@@ -2,6 +2,7 @@ package edu.co.icesi.model;
 
 import edu.co.icesi.db.MySQLConnection;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Hollywood {
@@ -17,8 +18,8 @@ public class Hollywood {
         this.actors = new HashMap<String, Actor>();
         this.genres = new HashMap<String, Genre>();
 
-        this.connection = new MySQLConnection();
-
+        //this.connection = new MySQLConnection();
+        this.loadDataBase();
     }
 
     public void loadDataBase(){
@@ -38,5 +39,18 @@ public class Hollywood {
 
     public void addGenre(String name) {
         this.genres.put(name, new Genre(name));
+    }
+
+    public ArrayList<TableMovie> getBasicData() {
+
+        TableMovie a = new TableMovie("Rambo 2", "Arnold\nEl pepe\nAdam Sandler", "Drama");
+        TableMovie b = new TableMovie("Interestelar", "Nolan\nEte Sech\nTotori", "Action\nSci-Fi");
+
+
+
+        ArrayList<TableMovie> tm = new ArrayList<TableMovie>();
+        tm.add(a);
+        tm.add(b);
+        return tm;
     }
 }

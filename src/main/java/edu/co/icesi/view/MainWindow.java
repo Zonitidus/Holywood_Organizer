@@ -1,9 +1,11 @@
 package edu.co.icesi.view;
 
 import edu.co.icesi.controller.MainWindowController;
+import edu.co.icesi.model.Hollywood;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -21,7 +23,7 @@ public class MainWindow extends Stage {
 
     private MainWindowController controller;
 
-    public MainWindow(){
+    public MainWindow(Hollywood model){
 
         this.table = new TableView();
         this.table.setPrefWidth(500);
@@ -36,8 +38,8 @@ public class MainWindow extends Stage {
         vBbox.setSpacing(25);
         vBbox.getChildren().add(this.consultBtn);
         vBbox.getChildren().add(this.deleteBtn);
-        vBbox.getChildren().add(this.linkBtn);
         vBbox.getChildren().add(this.addBtn);
+        vBbox.getChildren().add(this.linkBtn);
 
 
         HBox root = new HBox();
@@ -49,11 +51,12 @@ public class MainWindow extends Stage {
         vBbox2.getChildren().add(this.table);
 
         root.setSpacing(35);
+        root.getChildren().add(new Label(""));
         root.getChildren().add(vBbox2);
         root.getChildren().add(vBbox);
 
-        this.scene = new Scene(root, 650, 450);
-        this.controller = new MainWindowController(this);
+        this.scene = new Scene(root, 675, 450);
+        this.controller = new MainWindowController(this, model);
 
         this.setScene(scene);
 
@@ -81,5 +84,9 @@ public class MainWindow extends Stage {
 
     public MainWindowController getController() {
         return controller;
+    }
+
+    public void setTable(TableView table){
+        this.table = table;
     }
 }

@@ -14,7 +14,7 @@ public class Launcher extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        MainWindow mainWindow = new MainWindow();
+        MainWindow mainWindow = new MainWindow(null);
         mainWindow.show();
     }
 }
