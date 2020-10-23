@@ -2,12 +2,12 @@ package edu.co.icesi.controller;
 
 import edu.co.icesi.model.Hollywood;
 import edu.co.icesi.model.TableMovie;
+import edu.co.icesi.view.LinkWindow;
 import edu.co.icesi.view.MainWindow;
 import edu.co.icesi.view.RegisterWindow;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.ArrayList;
@@ -51,6 +51,9 @@ public class MainWindowController {
 
         this.view.getLinkBtn().setOnAction(e -> {
 
+            LinkWindow lw = new LinkWindow(this.model);
+            lw.show();
+            this.view.close();
 
         });
     }

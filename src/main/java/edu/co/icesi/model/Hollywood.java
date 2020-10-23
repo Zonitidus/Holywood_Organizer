@@ -1,6 +1,7 @@
 package edu.co.icesi.model;
 
 import edu.co.icesi.db.MySQLConnection;
+import javafx.scene.control.Tab;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +25,25 @@ public class Hollywood {
 
     public void loadDataBase(){
 
+        Movie m1 = new Movie("Rambo 2");
+        m1.addCast(new Actor("Manolo"));
+        m1.addCast(new Actor("Swaza"));
+        m1.addGenre(new Genre("Drama"));
+        m1.addGenre(new Genre("Sci-Fi"));
 
+        this.movies.put(m1.getName(), m1);
+
+        Actor a1 = new Actor("Manolo Kabezibolo");
+        Actor a2 = new Actor("Gurrupleto");
+
+        Genre g1 = new Genre("Drama");
+        Genre g2 = new Genre("Sci-Fi");
+
+        this.actors.put(a1.getName(), a1);
+        this.actors.put(a2.getName(), a2);
+
+        this.genres.put(g1.getName(), g1);
+        this.genres.put(g2.getName(), g2);
 
     }
 
@@ -43,14 +62,34 @@ public class Hollywood {
 
     public ArrayList<TableMovie> getBasicData() {
 
-        TableMovie a = new TableMovie("Rambo 2", "Arnold\nEl pepe\nAdam Sandler", "Drama");
-        TableMovie b = new TableMovie("Interestelar", "Nolan\nEte Sech\nTotori", "Action\nSci-Fi");
+        ArrayList<TableMovie> movies = new ArrayList<TableMovie>();
 
+        for (String key: this.movies.keySet()){
 
+            Movie m = this.movies.get(key);
 
-        ArrayList<TableMovie> tm = new ArrayList<TableMovie>();
-        tm.add(a);
-        tm.add(b);
-        return tm;
+            TableMovie tm = new TableMovie(m.getName(), m.listActors(), m.listGenres());
+            movies.add(tm);
+        }
+
+        return movies;
+    }
+
+    public HashMap<String, Movie> getMovies() {
+        return movies;
+    }
+
+    public HashMap<String, Actor> getActors() {
+        return actors;
+    }
+
+    public HashMap<String, Genre> getGenres() {
+        return genres;
+    }
+
+    public void linkActorToMovie(String movieName, String actorName) {
+    }
+
+    public void linkGenreToMovie(String movieName, String genre) {
     }
 }

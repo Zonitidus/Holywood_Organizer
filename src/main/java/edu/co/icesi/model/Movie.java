@@ -15,6 +15,35 @@ public class Movie {
         this.genres = new ArrayList<Genre>();
     }
 
+    public void addCast(Actor a){
+        this.cast.put(a.getName(), a);
+    }
+
+    public void addGenre(Genre a){
+        this.genres.add(a);
+    }
+
+    public String listActors(){
+
+        String actors = "";
+
+        for(String key: this.cast.keySet()){
+            actors+=this.cast.get(key).getName()+"\n";
+        }
+        return actors;
+    }
+
+    public String listGenres(){
+
+        String genres = "";
+
+        for(Genre gen: this.genres){
+            genres+= gen.getName()+"\n";
+        }
+        return genres;
+    }
+
+
     public String getName() {
         return name;
     }
