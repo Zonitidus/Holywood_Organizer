@@ -79,7 +79,7 @@ public class LinkWindowController {
             }
         }
         else{
-            System.out.println(">>>>ERROOOOOOR");
+
         }
     }
 

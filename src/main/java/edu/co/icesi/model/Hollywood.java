@@ -92,4 +92,13 @@ public class Hollywood {
 
     public void linkGenreToMovie(String movieName, String genre) {
     }
+
+    public void deleteMovie(String value) {
+    }
+
+    public void deleteActor(String value) {
+    }
+
+    public void deleteGenre(String value) {
+    }
 }

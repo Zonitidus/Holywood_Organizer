@@ -1,46 +1,43 @@
 package edu.co.icesi.view;
 
-import edu.co.icesi.controller.DeleteWindowController;
+import edu.co.icesi.controller.ConsultWindowController;
 import edu.co.icesi.controller.RegisterWindowController;
 import edu.co.icesi.model.Hollywood;
-import edu.co.icesi.model.Movie;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.util.Dictionary;
-import java.util.HashMap;
-
-public class DeleteWindow extends Stage {
+public class ConsultWindow extends Stage {
 
     private String selected;
-    private DeleteWindowController controller;
 
+    private ComboBox<String> type;
+    private ComboBox<String> entities;
+    private TableView table;
     private Button acceptBtn;
     private Button cancelBtn;
-    private ComboBox<String> type;
 
-    private ComboBox<String> entities;
+    private ConsultWindowController controller;
 
-    public DeleteWindow(Hollywood model) {
+    public ConsultWindow(Hollywood model) {
 
-        this.acceptBtn = new Button("Delete");
+        this.acceptBtn = new Button("Accept");
         this.cancelBtn = new Button("Cancel");
 
-        this.type = new ComboBox<String>();
-        this.type.getItems().addAll(RegisterWindow.MOVIE,RegisterWindow.ACTOR, RegisterWindow.GENRE);
+        this.table = new TableView();
+        this.table.setOpacity(0);
+        this.table.setEditable(false);
 
         this.entities = new ComboBox<String>();
 
-        type.setOnAction(e -> {
-            this.selected = type.getValue();
-        });
+        this.type = new ComboBox<String>();
+        this.type.getItems().addAll(RegisterWindow.MOVIE, RegisterWindow.ACTOR, RegisterWindow.GENRE);
 
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
@@ -50,17 +47,26 @@ public class DeleteWindow extends Stage {
         VBox vbox = new VBox();
         vbox.setSpacing(25);
         vbox.setAlignment(Pos.CENTER);
-
-        vbox.getChildren().addAll(this.type, this.entities, hBox);
+        vbox.getChildren().addAll(this.type, this.entities, this.table, hBox);
 
 
         Scene scene = new Scene(vbox, 400, 400);
         this.setScene(scene);
-        this.controller = new DeleteWindowController(this, model);
+        this.controller = new ConsultWindowController(this, model);
+
     }
+
 
     public String getSelected() {
         return selected;
+    }
+
+    public ComboBox<String> getType() {
+        return type;
+    }
+
+    public TableView getTable() {
+        return table;
     }
 
     public Button getAcceptBtn() {
@@ -71,15 +77,7 @@ public class DeleteWindow extends Stage {
         return cancelBtn;
     }
 
-    public ComboBox<String> getType() {
-        return type;
-    }
+    public ComboBox<String> getEntities(){return entities;}
 
-    public ComboBox<String> getEntities() {
-        return entities;
-    }
-
-    public void setSelected(String sel){
-        this.selected = sel;
-    }
+    public  void setSelected(String sel){ this.selected = sel;}
 }

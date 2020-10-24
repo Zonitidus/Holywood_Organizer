@@ -2,9 +2,7 @@ package edu.co.icesi.controller;
 
 import edu.co.icesi.model.Hollywood;
 import edu.co.icesi.model.TableMovie;
-import edu.co.icesi.view.LinkWindow;
-import edu.co.icesi.view.MainWindow;
-import edu.co.icesi.view.RegisterWindow;
+import edu.co.icesi.view.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
@@ -41,11 +39,17 @@ public class MainWindowController {
 
         this.view.getConsultBtn().setOnAction(e -> {
 
+            ConsultWindow cw = new ConsultWindow(this.model);
+            cw.show();
+            this.view.close();
 
         });
 
         this.view.getDeleteBtn().setOnAction(e -> {
 
+            DeleteWindow dw = new DeleteWindow(this.model);
+            dw.show();
+            this.view.close();
 
         });
 
