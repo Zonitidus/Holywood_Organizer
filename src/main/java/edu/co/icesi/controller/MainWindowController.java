@@ -29,6 +29,11 @@ public class MainWindowController {
 
     private void initButtons() {
 
+        this.view.setOnCloseRequest(e -> {
+            this.model.closeConnection();
+        });
+
+
         this.view.getAddBtn().setOnAction(e -> {
 
             RegisterWindow rw = new RegisterWindow(this.model);
@@ -62,7 +67,7 @@ public class MainWindowController {
         });
     }
 
-    public void showTable(){
+    public void showTable() {
 
 
         TableColumn nameColumn = new TableColumn("Movie");
@@ -78,14 +83,11 @@ public class MainWindowController {
         genres.setCellValueFactory(new PropertyValueFactory<TableMovie, String>("genres"));
 
 
-
-
         ArrayList<TableMovie> data = this.model.getBasicData();
         ObservableList<TableMovie> items = FXCollections.observableArrayList();
 
 
-
-        for (int i = 0; i< data.size(); i++){
+        for (int i = 0; i < data.size(); i++) {
 
             items.add(data.get(i));
         }

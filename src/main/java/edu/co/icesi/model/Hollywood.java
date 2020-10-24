@@ -19,45 +19,63 @@ public class Hollywood {
         this.actors = new HashMap<String, Actor>();
         this.genres = new HashMap<String, Genre>();
 
-        //this.connection = new MySQLConnection();
+        this.connection = new MySQLConnection();
         this.loadDataBase();
+
     }
 
     public void loadDataBase(){
 
-        Movie m1 = new Movie("Rambo 2");
-        m1.addCast(new Actor("Manolo"));
-        m1.addCast(new Actor("Swaza"));
-        m1.addGenre(new Genre("Drama"));
-        m1.addGenre(new Genre("Sci-Fi"));
+        ArrayList<String> movies = this.connection.listMovies();
+        for (String movie: movies){
+            this.movies.put(movie, new Movie(movie));
+        }
 
-        this.movies.put(m1.getName(), m1);
+        ArrayList<String> actors = this.connection.listActors();
+        for (String actor: actors){
+            this.actors.put(actor, new Actor(actor));
+        }
 
-        Actor a1 = new Actor("Manolo Kabezibolo");
-        Actor a2 = new Actor("Gurrupleto");
+        ArrayList<String> genres = this.connection.listGenres();
+        for (String genre: genres){
+            this.genres.put(genre, new Genre(genre));
+        }
 
-        Genre g1 = new Genre("Drama");
-        Genre g2 = new Genre("Sci-Fi");
+        this.loadLinks();
+    }
 
-        this.actors.put(a1.getName(), a1);
-        this.actors.put(a2.getName(), a2);
+    public void loadLinks(){
 
-        this.genres.put(g1.getName(), g1);
-        this.genres.put(g2.getName(), g2);
+        for(String movie: this.movies.keySet()){
 
+            ArrayList<String> actors = this.connection.getMovieActors(movie);
+
+            for(String actor: actors){
+                this.movies.get(movie).addCast(new Actor(actor));
+            }
+
+            this.movies.get(movie).addGenre(new Genre(this.connection.getMovieGenres(movie).get(0)));
+        }
+
+
+        System.out.println(this.connection.getMovieActors("Tenet").toString());
+        System.out.println(this.connection.getMovieGenres("Tenet").toString());
     }
 
 
     public void addActor(String name) {
         this.actors.put(name, new Actor(name));
+        this.connection.addActor(name);
     }
 
     public void addMovie(String name) {
         this.movies.put(name, new Movie(name));
+        this.connection.addMovie(name);
     }
 
     public void addGenre(String name) {
         this.genres.put(name, new Genre(name));
+        this.connection.addGenre(name);
     }
 
     public ArrayList<TableMovie> getBasicData() {
@@ -75,6 +93,26 @@ public class Hollywood {
         return movies;
     }
 
+    public void linkActorToMovie(String movieName, String actorName) {
+
+        this.connection.linkMovieAndActor(movieName, actorName);
+    }
+
+    public void linkGenreToMovie(String movieName, String genre) {
+
+        this.connection.linkMovieAndGenre(movieName, genre);
+    }
+
+    public void deleteMovie(String value) {
+    }
+
+    public void deleteActor(String value) {
+    }
+
+    public void deleteGenre(String value) {
+    }
+
+
     public HashMap<String, Movie> getMovies() {
         return movies;
     }
@@ -87,18 +125,7 @@ public class Hollywood {
         return genres;
     }
 
-    public void linkActorToMovie(String movieName, String actorName) {
-    }
-
-    public void linkGenreToMovie(String movieName, String genre) {
-    }
-
-    public void deleteMovie(String value) {
-    }
-
-    public void deleteActor(String value) {
-    }
-
-    public void deleteGenre(String value) {
+    public void closeConnection(){
+        this.connection.closeDB();
     }
 }

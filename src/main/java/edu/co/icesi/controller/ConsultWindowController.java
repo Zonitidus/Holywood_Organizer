@@ -26,6 +26,11 @@ public class ConsultWindowController {
     }
 
     private void initNodes() {
+
+        this.view.setOnCloseRequest(e -> {
+            this.model.closeConnection();
+        });
+
         this.view.getCancelBtn().setOnAction(e -> {
             MainWindow mw = new MainWindow(this.model);
             mw.show();
