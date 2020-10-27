@@ -32,6 +32,7 @@ public class ConsultWindowController {
         });
 
         this.view.getCancelBtn().setOnAction(e -> {
+            this.model.loadDataBase();
             MainWindow mw = new MainWindow(this.model);
             mw.show();
             this.view.close();
@@ -41,22 +42,59 @@ public class ConsultWindowController {
 
             String entity = "";
 
-            if (this.view.getSelected() != null) {
+            TableColumn nameColumn = new TableColumn("Movie");
+            nameColumn.setMinWidth(200);
+            nameColumn.setCellValueFactory(new PropertyValueFactory<TableMovie, String>("movie"));
+
+            TableColumn actors = new TableColumn("Actors");
+            actors.setMinWidth(198);
+            actors.setCellValueFactory(new PropertyValueFactory<TableMovie, String>("actors"));
+
+            TableColumn genres = new TableColumn("Genres");
+            genres.setMinWidth(100);
+            genres.setCellValueFactory(new PropertyValueFactory<TableMovie, String>("genres"));
+
+
+            if (this.view.getSelected() != null && this.view.getEntities().getValue() != null) {
                 if (this.view.getSelected().equals(RegisterWindow.MOVIE)) {
 
-                }
 
-                if (this.view.getSelected().equals(RegisterWindow.ACTOR)) {
 
                 }
 
-                if (this.view.getSelected().equals(RegisterWindow.GENRE)) {
+                else if (this.view.getSelected().equals(RegisterWindow.ACTOR)) {
+
+                    ArrayList<TableMovie> data = this.model.moviesByActor(this.view.getEntities().getValue());
+                    ObservableList<TableMovie> items = FXCollections.observableArrayList();
+
+
+                    for (int i = 0; i < data.size(); i++) {
+
+                        items.add(data.get(i));
+                    }
+                    this.view.getTable().setItems(items);
+                    this.view.getTable().getColumns().addAll(nameColumn, actors, genres);
+
 
                 }
 
-                showMessage("Register", entity + " successfully registered!", Alert.AlertType.INFORMATION);
+                else if(this.view.getSelected().equals(RegisterWindow.GENRE)) {
+
+
+                    ArrayList<TableMovie> data = this.model.moviesByGenre(this.view.getEntities().getValue());
+                    ObservableList<TableMovie> items = FXCollections.observableArrayList();
+
+
+                    for (int i = 0; i < data.size(); i++) {
+
+                        items.add(data.get(i));
+                    }
+                    this.view.getTable().setItems(items);
+                    this.view.getTable().getColumns().addAll(nameColumn, actors, genres);
+                }
+
             } else {
-                showMessage(":(", entity + " Please select an option to register", Alert.AlertType.ERROR);
+                showMessage(":(", entity + " Please select an option to filter", Alert.AlertType.ERROR);
             }
         });
 

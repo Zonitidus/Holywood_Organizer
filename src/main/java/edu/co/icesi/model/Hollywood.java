@@ -15,42 +15,43 @@ public class Hollywood {
     private MySQLConnection connection;
 
     public Hollywood() {
-        this.movies = new HashMap<String, Movie>();
-        this.actors = new HashMap<String, Actor>();
-        this.genres = new HashMap<String, Genre>();
 
         this.connection = new MySQLConnection();
         this.loadDataBase();
 
     }
 
-    public void loadDataBase(){
+    public void loadDataBase() {
+
+        this.movies = new HashMap<String, Movie>();
+        this.actors = new HashMap<String, Actor>();
+        this.genres = new HashMap<String, Genre>();
 
         ArrayList<String> movies = this.connection.listMovies();
-        for (String movie: movies){
+        for (String movie : movies) {
             this.movies.put(movie, new Movie(movie));
         }
 
         ArrayList<String> actors = this.connection.listActors();
-        for (String actor: actors){
+        for (String actor : actors) {
             this.actors.put(actor, new Actor(actor));
         }
 
         ArrayList<String> genres = this.connection.listGenres();
-        for (String genre: genres){
+        for (String genre : genres) {
             this.genres.put(genre, new Genre(genre));
         }
 
         this.loadLinks();
     }
 
-    public void loadLinks(){
+    public void loadLinks() {
 
-        for(String movie: this.movies.keySet()){
+        for (String movie : this.movies.keySet()) {
 
             ArrayList<String> actors = this.connection.getMovieActors(movie);
 
-            for(String actor: actors){
+            for (String actor : actors) {
                 this.movies.get(movie).addCast(new Actor(actor));
             }
 
@@ -82,7 +83,7 @@ public class Hollywood {
 
         ArrayList<TableMovie> movies = new ArrayList<TableMovie>();
 
-        for (String key: this.movies.keySet()){
+        for (String key : this.movies.keySet()) {
 
             Movie m = this.movies.get(key);
 
@@ -103,14 +104,56 @@ public class Hollywood {
         this.connection.linkMovieAndGenre(movieName, genre);
     }
 
-    public void deleteMovie(String value) {
+    public void deleteMovie(String movie) {
+        this.connection.deleteMovie(movie);
     }
 
-    public void deleteActor(String value) {
+    public void deleteActor(String actor) {
+        this.connection.deleteActor(actor);
     }
 
-    public void deleteGenre(String value) {
+    public void deleteGenre(String genre) {
+        this.connection.deleteGenre(genre);
     }
+
+    public ArrayList<TableMovie> moviesByGenre(String genre){
+
+
+
+        ArrayList<TableMovie> movies = new ArrayList<TableMovie>();
+
+        for (String key : this.movies.keySet()) {
+
+            Movie m = this.movies.get(key);
+
+            if(m.getGenres().get(0).getName().equals(genre)){
+                TableMovie tm = new TableMovie(m.getName(), m.listActors(), m.listGenres());
+                movies.add(tm);
+            }
+        }
+
+        return movies;
+
+    }
+
+    public ArrayList<TableMovie> moviesByActor(String actor){
+
+        ArrayList<TableMovie> movies = new ArrayList<TableMovie>();
+
+        for (String key : this.movies.keySet()) {
+
+            Movie m = this.movies.get(key);
+
+            if(m.getCast().containsKey(actor)){
+                TableMovie tm = new TableMovie(m.getName(), m.listActors(), m.listGenres());
+                movies.add(tm);
+            }
+        }
+
+        return movies;
+
+    }
+
 
 
     public HashMap<String, Movie> getMovies() {
@@ -125,7 +168,8 @@ public class Hollywood {
         return genres;
     }
 
-    public void closeConnection(){
+    public void closeConnection() {
         this.connection.closeDB();
+
     }
 }

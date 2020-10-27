@@ -30,6 +30,7 @@ public class LinkWindowController {
         });
 
         this.view.getCancelBtn().setOnAction(e->{
+            this.model.loadDataBase();
             MainWindow mw = new MainWindow(this.model);
             mw.show();
             this.view.close();

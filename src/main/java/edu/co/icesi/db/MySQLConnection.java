@@ -24,14 +24,14 @@ public class MySQLConnection {
         }
     }
 
-    private void createTables(){
+    private void createTables() {
 
         try {
             Statement statement = connection.createStatement();
 
-            statement.execute("Create table genres(id INT PRIMARY KEY AUTO_INCREMENT, genre varchar(100))");
-            statement.execute("CREATE TABLE movies(id INT PRIMARY KEY AUTO_INCREMENT, name varchar(100), genreId int, foreign key (genreId) references genres(id))");
-            statement.execute("CREATE TABLE actors(id INT PRIMARY KEY AUTO_INCREMENT, name varchar(100))");
+            statement.execute("Create table genres(id INT PRIMARY KEY AUTO_INCREMENT, genre VARCHAR(100))");
+            statement.execute("CREATE TABLE movies(id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(100), genreId INT, FOREIGN KEY (genreId) REFERENCES genres(id))");
+            statement.execute("CREATE TABLE actors(id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(100))");
             statement.execute("CREATE TABLE movies_actors(id INT PRIMARY KEY AUTO_INCREMENT, movie_id INT, actor_id INT, FOREIGN KEY (movie_id) REFERENCES movies(id), FOREIGN KEY (actor_id) REFERENCES actors(id))");
 
         } catch (SQLException throwables) {
@@ -101,6 +101,7 @@ public class MySQLConnection {
         return index;
 
     }
+
     public int getActorId(String mName) {
 
         int index = -1;
@@ -212,8 +213,8 @@ public class MySQLConnection {
         try {
             Statement statement = connection.createStatement();
             String sql = "INSERT INTO movies_actors(movie_id, actor_id) values ('$idMovie','$idActor')"
-                    .replace("$idMovie", idMovie+"")
-                    .replace("$idActor", idActor+"");
+                    .replace("$idMovie", idMovie + "")
+                    .replace("$idActor", idActor + "");
             statement.execute(sql);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -228,8 +229,8 @@ public class MySQLConnection {
         try {
             Statement statement = connection.createStatement();
             String sql = "UPDATE movies SET genreId = '$idGenre' WHERE id = '$idMovie'"
-                    .replace("$idMovie", idMovie+"")
-                    .replace("$idGenre", idGenre+"");
+                    .replace("$idMovie", idMovie + "")
+                    .replace("$idGenre", idGenre + "");
             statement.execute(sql);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -237,7 +238,7 @@ public class MySQLConnection {
 
     }
 
-    public ArrayList<String> getMovieGenres(String movieName){
+    public ArrayList<String> getMovieGenres(String movieName) {
 
         ArrayList<String> genres = new ArrayList<String>();
         int idMovie = this.getMovieId(movieName);
@@ -247,7 +248,7 @@ public class MySQLConnection {
             Statement statement = connection.createStatement();
             String sql = "SELECT genres.genre FROM(genres INNER JOIN movies ON genres.id = movies.genreId) " +
                     "WHERE movies.id = '$idMovie'"
-                            .replace("$idMovie", idMovie+"");
+                            .replace("$idMovie", idMovie + "");
             ResultSet rset = statement.executeQuery(sql);
 
             while (rset.next()) {
@@ -262,7 +263,7 @@ public class MySQLConnection {
         return genres;
     }
 
-    public ArrayList<String> getMovieActors(String movieName){
+    public ArrayList<String> getMovieActors(String movieName) {
 
         ArrayList<String> actors = new ArrayList<String>();
 
@@ -273,7 +274,7 @@ public class MySQLConnection {
             Statement statement = connection.createStatement();
             String sql = "SELECT actors.name FROM(actors INNER JOIN movies_actors ON actors.id = movies_actors.actor_id) " +
                     "INNER JOIN movies ON movies_actors.movie_id = movies.id WHERE movies.id = '$idMovie'"
-                            .replace("$idMovie", idMovie+"");
+                            .replace("$idMovie", idMovie + "");
             ResultSet rset = statement.executeQuery(sql);
 
             while (rset.next()) {
@@ -287,6 +288,94 @@ public class MySQLConnection {
 
         return actors;
     }
+
+    public void deleteMovie(String movie) {
+
+        int idMovie = this.getMovieId(movie);
+
+        try {
+            Statement statement = connection.createStatement();
+            String sql1 = "DELETE FROM movies_actors WHERE movie_id = '$idMovie'"
+                    .replace("$idMovie", idMovie + "");
+
+            String sql2 = "DELETE FROM movies WHERE id = '$idMovie'"
+                    .replace("$idMovie", idMovie + "");
+
+            statement.execute(sql1);
+            statement.execute(sql2);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+
+    }
+
+    public void deleteActor(String actor) {
+
+        int idActor = this.getActorId(actor);
+
+        try {
+            Statement statement = connection.createStatement();
+            String sql1 = "DELETE FROM movies_actors WHERE actor_id = '$idActor'"
+                    .replace("$idActor", idActor + "");
+
+            String sql2 = "DELETE FROM actors WHERE id = '$idActor'"
+                    .replace("$idActor", idActor + "");
+
+            statement.execute(sql1);
+            statement.execute(sql2);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+
+    }
+
+    public ArrayList<String> moviesIdByGenre(int idGenre) {
+
+        ArrayList<String> movies = new ArrayList<String>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rset = statement.executeQuery("SELECT movies.name FROM movies INNER JOIN genres ON movies.genreId = genres.id WHERE genres.id ='$idGenre'"
+                    .replace("$idGenre", idGenre + ""));
+            while (rset.next()) {
+                String id = rset.getString(1);
+                System.out.println(id);
+                movies.add(""+id);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return movies;
+    }
+
+    public void deleteGenre(String genre) {
+
+        int idGenre = this.getGenreId(genre);
+
+        try {
+            Statement statement = connection.createStatement();
+
+            ArrayList<String> movies = moviesIdByGenre(idGenre);
+
+
+            for(String nameM: movies){
+                this.deleteMovie(nameM);
+            }
+
+            String sql2 = "DELETE FROM genres WHERE id = '$idGenre'"
+                    .replace("$idGenre", idGenre + "");
+
+            statement.execute(sql2);
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+    }
+
+
 
 }
 

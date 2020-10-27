@@ -30,6 +30,7 @@ public class DeleteWindowController {
         });
 
         this.view.getCancelBtn().setOnAction(e -> {
+            this.model.loadDataBase();
             MainWindow mw = new MainWindow(this.model);
             mw.show();
             this.view.close();
@@ -37,11 +38,11 @@ public class DeleteWindowController {
 
         this.view.getAcceptBtn().setOnAction(e -> {
 
-            if (this.view.getEntities().getValue() != null && this.view.getEntities().getValue().equals("")) {
+            if (this.view.getEntities().getValue() != null && !this.view.getEntities().getValue().equals("")) {
 
-                if (this.view.getEntities().getValue().equals(RegisterWindow.MOVIE)) {
+                if (this.view.getType().getValue().equals(RegisterWindow.MOVIE)) {
                     this.model.deleteMovie(this.view.getEntities().getValue());
-                } else if (this.view.getEntities().getValue().equals(RegisterWindow.ACTOR)) {
+                } else if (this.view.getType().getValue().equals(RegisterWindow.ACTOR)) {
                     this.model.deleteActor(this.view.getEntities().getValue());
                 } else {
                     this.model.deleteGenre(this.view.getEntities().getValue());
