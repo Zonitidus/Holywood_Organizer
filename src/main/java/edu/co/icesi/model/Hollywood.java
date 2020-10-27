@@ -136,6 +136,23 @@ public class Hollywood {
 
     }
 
+    public TableMovie getMovie(String movie){
+
+        for (String key : this.movies.keySet()) {
+
+            Movie m = this.movies.get(key);
+
+            if(m.getName().equals(movie)){
+                TableMovie tm = new TableMovie(m.getName(), m.listActors(), m.listGenres());
+                return tm;
+            }
+        }
+
+        return new TableMovie("", "", "");
+
+    }
+
+
     public ArrayList<TableMovie> moviesByActor(String actor){
 
         ArrayList<TableMovie> movies = new ArrayList<TableMovie>();

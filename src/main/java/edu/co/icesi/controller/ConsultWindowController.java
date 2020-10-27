@@ -58,6 +58,17 @@ public class ConsultWindowController {
             if (this.view.getSelected() != null && this.view.getEntities().getValue() != null) {
                 if (this.view.getSelected().equals(RegisterWindow.MOVIE)) {
 
+                    ArrayList<TableMovie> data = new ArrayList<TableMovie>();
+                    data.add(this.model.getMovie(this.view.getEntities().getValue()));
+                    ObservableList<TableMovie> items = FXCollections.observableArrayList();
+
+
+                    for (int i = 0; i < data.size(); i++) {
+
+                        items.add(data.get(i));
+                    }
+                    this.view.getTable().setItems(items);
+                    this.view.getTable().getColumns().addAll(nameColumn, actors, genres);
 
 
                 }
