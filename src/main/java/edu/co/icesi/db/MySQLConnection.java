@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class MySQLConnection {
 
     private Connection connection;
+    private final static int NULL_GENRE = 10;
 
     public MySQLConnection() {
         try {
@@ -132,15 +133,17 @@ public class MySQLConnection {
 
         try {
 
-            Statement statement = connection.createStatement();
-            ResultSet rset = statement.executeQuery("SELECT * from genres");
+            System.out.println(mName);
 
-            while (rset.next()) {
-                String name = rset.getString(rset.findColumn("genre"));
-                if (name.equals(mName)) {
-                    index = rset.getInt("id");
-                    break;
-                }
+            Statement statement = connection.createStatement();
+            ResultSet rset = statement.executeQuery("SELECT * FROM genres WHERE genres.genre = '$mName'"
+            .replace("$mName",mName));
+
+            while(rset.next()){
+                index = rset.getInt("id");
+                String n = rset.getString("genre");
+                System.out.println(index+" -----> "+n);
+                break;
             }
 
         } catch (SQLException throwables) {
@@ -350,13 +353,12 @@ public class MySQLConnection {
         return movies;
     }
 
-    public void deleteGenre(String genre) {
+    /*public void deleteGenre(String genre) {
 
         int idGenre = this.getGenreId(genre);
 
         try {
             Statement statement = connection.createStatement();
-
             ArrayList<String> movies = moviesIdByGenre(idGenre);
 
 
@@ -372,6 +374,33 @@ public class MySQLConnection {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+
+    }*/
+
+    public void deleteGenre(String genre){
+
+        int idGenre = this.getGenreId(genre);
+
+        try {
+            Statement statement = connection.createStatement();
+
+            String sql1 = "UPDATE movies SET genreId = $nullGenre WHERE genreId = $idGenre"
+                    .replace("$idGenre", idGenre + "")
+                    .replace("$nullGenre", this.NULL_GENRE+"");
+
+
+            System.out.println(sql1);
+
+            String sql2 = "DELETE FROM genres WHERE id = '$idGenre'"
+                    .replace("$idGenre", idGenre + "");
+
+            statement.execute(sql1);
+            statement.execute(sql2);
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
 
     }
 

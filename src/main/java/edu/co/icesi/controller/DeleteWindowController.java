@@ -45,6 +45,7 @@ public class DeleteWindowController {
                 } else if (this.view.getType().getValue().equals(RegisterWindow.ACTOR)) {
                     this.model.deleteActor(this.view.getEntities().getValue());
                 } else {
+                    System.out.println(this.view.getEntities().getValue());
                     this.model.deleteGenre(this.view.getEntities().getValue());
                 }
 

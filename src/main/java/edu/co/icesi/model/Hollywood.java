@@ -55,7 +55,8 @@ public class Hollywood {
                 this.movies.get(movie).addCast(new Actor(actor));
             }
 
-            this.movies.get(movie).addGenre(new Genre(this.connection.getMovieGenres(movie).get(0)));
+            if(this.connection.getMovieGenres(movie).size()> 0)
+                this.movies.get(movie).addGenre(new Genre(this.connection.getMovieGenres(movie).get(0)));
         }
 
 
